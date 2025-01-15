@@ -96,8 +96,8 @@ class CreateRoomPage extends Component{
 }
 export default withRouter(CreateRoomPage)*/
 import React, { useState } from "react";
-import { Link, Typography, Button, Grid, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import {Typography, Button, Grid, TextField, FormHelperText, FormControl, Radio, RadioGroup, FormControlLabel } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom"; // Import useNavigate hook
 
 const CreateRoomPage = () => {
     const defaultVotes = 1;
@@ -179,7 +179,7 @@ const CreateRoomPage = () => {
                 <Button color="primary" variant="contained" onClick={handleRoomButtonPressed}>Create a Room</Button>
             </Grid>
             <Grid item xs={12} align="center">
-                <Button color="secondary" variant="contained" component={Link} to="/">Back</Button>
+                <Button color="secondary" variant="contained" to="/" component={Link} >Back</Button>
             </Grid>
         </Grid>
     );
