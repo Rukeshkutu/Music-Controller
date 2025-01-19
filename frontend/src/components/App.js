@@ -13,8 +13,7 @@ export default class App extends Component {
                 <HomePage />
             </div>
         );
-        //return <h1>Testing React if it is working!</h1>;
-        //return <h1>{this.props.name}</h1>
+        
     }
 }
 /*const App = () => {
