@@ -72,3 +72,12 @@ class CreateRoomView(APIView):
                 self.request.session["room_code"] = room.code
                 return Response(RoomSerializer(room).data, status = status.HTTP_201_CREATED)
             return Response({'Bad Request': 'Invalid data.......'}, status = status.HTTP_400_BAD_REQUEST)
+
+class UserInRoom(APIView):
+    def get(self, request, format = None):
+        if not self.request.session.exixts(self.request.session.session_key):
+            self.request.session.create()
+        data = {
+            'code' = self.requst.session.get('room_code')
+        }
+        return JsonResponse()
