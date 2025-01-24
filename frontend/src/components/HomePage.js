@@ -4,13 +4,27 @@ import RoomJoinPage from "./RoomJoinPage";
 import Room from "./Room";
 import { Grid, Button, Typography } from "@mui/material";
 
-import { BrowserRouter as Router, Route, Routes,  Link, Redirect} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,  Link, Redirect, Navigate} from "react-router-dom";
 export default class HomePage extends Component{
     constructor(props){
         super(props);
+        this.state ={
+            roomCode: null,
+        }
     }
     async componentDidMount() {
-        
+        fetch('/api/user-in-room/')
+            .then((response) => {
+                if(!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json()
+            })
+            .then((data) => {
+                this.setState({
+                    roomCode: data.code,
+                });
+            });
     }
 
     renderHomePage() {
@@ -35,7 +49,13 @@ export default class HomePage extends Component{
     render(){
         return (<Router>
                     <Routes>
-                        <Route path="/" element = {this.renderHomePage()} />
+                        <Route path="/" element = {
+                            this.state.roomCode ? (
+                                <Navigate to={`/room/${this.state.roomCode}`} />
+                            ) : (
+                                this.renderHomePage()
+                            )
+                        }/>
 
                         <Route path="/join" element={<RoomJoinPage />} />
                         <Route path="/create" element={<CreateRoomPage />} />
