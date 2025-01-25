@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { useParams } from "react-router-dom";
-
+import {Grid, Button, Typography} from '@mui/material'
+import {Link} from "react-router-dom"
 const withParams = (Component) => {
     return (props) => {
         const params = useParams();
@@ -32,12 +33,41 @@ class Room extends Component{
     }
     render(){
         return(
-            <div>
+            <Grid container spacing={1}>
+                <Grid item xs ={12} align = "center">
+                    <Typography variant="h4" component= "h4">
+                        Room Code: {this.roomCode}
+                    </Typography>
+                </Grid>
+                <Grid item xs ={12} align = "center">
+                    <Typography variant="h4">
+                        Votes to Skip: {this.state.votesToSkip}
+                    </Typography>
+                </Grid>
+                <Grid item xs ={12} align = "center">
+                    <Typography variant="h6">
+                    Guest Can Pause: {this.state.guestCanPause.toString()}
+                    </Typography>
+                </Grid>
+                <Grid item xs ={12} align = "center">
+                    <Typography variant="h6">
+                        Host: {this.state.isHost.toString()}
+                    </Typography>
+                </Grid>
+                <Grid item xs ={12} align = "center">
+                    
+                    <Button variant = "contained" color = "secondary" to ="/" component = {Link}>
+                        Leave Room
+                    </Button>
+                    
+                </Grid>
+            </Grid>
+           /* <div>
                 <h3>Room Code: {this.roomCode}</h3>
                 <p>Votes: {this.state.votesToSkip}</p>
                 <p>Guest Can Pause: {this.state.guestCanPause.toString()}</p>
                 <p>Host: {this.state.isHost.toString()}</p>
-            </div>
+            </div>*/
         );
     }
 }
