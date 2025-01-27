@@ -18,6 +18,7 @@ class Room extends Component{
             isHost:false,
         };
         this.roomCode = this.props.params.roomCode;
+        this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
     }
 
     getRoomDetails(){
@@ -30,6 +31,16 @@ class Room extends Component{
                 isHost: data.is_host,
             });
         });
+    }
+
+    leaveButtonPressed (){
+        const requestOptions = {
+            method: "POST",
+            headers: {"Context-Type": "application/json"},
+        }; 
+        fetch('/api/leave-room/', requestOptions).then((_response) => {
+            this.props.history.push('/');
+        });  
     }
     render(){
         return(
@@ -56,7 +67,7 @@ class Room extends Component{
                 </Grid>
                 <Grid item xs ={12} align = "center">
                     
-                    <Button variant = "contained" color = "secondary" to ="/" component = {Link}>
+                    <Button variant = "contained" color = "secondary" onClick={this.leaveButtonPressed}>
                         Leave Room
                     </Button>
                     
