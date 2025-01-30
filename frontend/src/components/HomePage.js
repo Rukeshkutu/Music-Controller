@@ -4,13 +4,15 @@ import RoomJoinPage from "./RoomJoinPage";
 import Room from "./Room";
 import { Grid, Button, Typography } from "@mui/material";
 
-import { BrowserRouter as Router, Route, Routes,  Link, Redirect, Navigate} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,  Link, Navigate} from "react-router-dom";
+
 export default class HomePage extends Component{
     constructor(props){
         super(props);
         this.state ={
-            roomCode: null,
+            roomCode: null,//Tracks the room code if the user is already in a room
         }
+        this.clearRoomCode = this.clearRoomCode.bind(this);
     }
     async componentDidMount() {
         fetch('/api/user-in-room/')
@@ -25,6 +27,13 @@ export default class HomePage extends Component{
                     roomCode: data.code,
                 });
             });
+    }
+
+    clearRoomCode(){
+        this.setState({
+            roomCode: null,
+
+        });
     }
 
     renderHomePage() {
@@ -59,7 +68,7 @@ export default class HomePage extends Component{
 
                         <Route path="/join" element={<RoomJoinPage />} />
                         <Route path="/create" element={<CreateRoomPage />} />
-                        <Route path = "/room/:roomCode" element = {<Room />} />
+                        <Route path = "/room/:roomCode" element = {<Room leaveRoomCallback = {this.clearRoomCode} />}/>
                     </Routes>
             </Router>)    
     };

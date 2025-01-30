@@ -1,11 +1,13 @@
 import React, {Component} from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {Grid, Button, Typography} from '@mui/material'
 import {Link} from "react-router-dom"
+
 const withParams = (Component) => {
     return (props) => {
         const params = useParams();
-        return <Component{...props} params = {params} />;
+        const navigate = useNavigate();
+        return <Component{...props} params = {params} navigate = {navigate} />;
     };
 };
 
@@ -18,12 +20,20 @@ class Room extends Component{
             isHost:false,
         };
         this.roomCode = this.props.params.roomCode;
+        this.getRoomDetails();
         this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
     }
 
     getRoomDetails(){
         fetch('/api/get-room/' + '?code=' + this.roomCode)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                this.props.leaveRoomCallback();
+                this.props.navigate("/");
+                return null;
+            }
+            return response.json()
+        })
         .then((data) => {
             this.setState({
                 votesToSkip: data.vote_to_skip,
@@ -39,7 +49,8 @@ class Room extends Component{
             headers: {"Context-Type": "application/json"},
         }; 
         fetch('/api/leave-room/', requestOptions).then((_response) => {
-            this.props.history.push('/');
+            this.props.leaveRoomCallback();
+            this.props.navigate('/');
         });  
     }
     render(){
