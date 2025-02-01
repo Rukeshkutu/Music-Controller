@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {Grid, Button, Typography} from '@mui/material'
-import {Link} from "react-router-dom"
+//import {Link} from "react-router-dom"
 
 const withParams = (Component) => {
     return (props) => {
@@ -20,35 +20,48 @@ class Room extends Component{
             isHost:false,
         };
         this.roomCode = this.props.params.roomCode;
-        this.getRoomDetails();
+        this.getRoomDetails = this.getRoomDetails.bind(this);
         this.leaveButtonPressed = this.leaveButtonPressed.bind(this);
     }
 
+    componentDidMount(){
+        this.getRoomDetails();
+    }
+
+    //fetch room detail from api
     getRoomDetails(){
-        fetch('/api/get-room/' + '?code=' + this.roomCode)
+        fetch('/api/get-room/?code=' + this.roomCode)
         .then((response) => {
             if (!response.ok) {
                 this.props.leaveRoomCallback();
                 this.props.navigate("/");
-                return null;
+                throw new Error("Room not found.");
+                
             }
             return response.json()
         })
         .then((data) => {
+            //if (data){
             this.setState({
                 votesToSkip: data.vote_to_skip,
                 guestCanPause: data.guest_can_pause,
                 isHost: data.is_host,
             });
+           // }
         });
+        //.catch((error) => {
+        //    console.error("Enter fetching room details:", error);
+        //});
     }
 
+    //Handle leaving the room
     leaveButtonPressed (){
         const requestOptions = {
             method: "POST",
-            headers: {"Context-Type": "application/json"},
+            headers: {"Content-Type": "application/json"},
         }; 
-        fetch('/api/leave-room/', requestOptions).then((_response) => {
+        fetch('/api/leave-room/', requestOptions)
+        .then((_response) => {
             this.props.leaveRoomCallback();
             this.props.navigate('/');
         });  
